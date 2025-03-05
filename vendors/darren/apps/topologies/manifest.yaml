@@ -8,7 +8,7 @@ spec:
   title: Topologies
   description: |
     This application provides physical topology support
-  image: ghcr.io/dtrichards01/apps/topologies:v24.12.2
+  image: ghcr.io/dtrichards01/apps/topologies:v24.12.3
   author: darren
   appInfo:
     license: LICENSE

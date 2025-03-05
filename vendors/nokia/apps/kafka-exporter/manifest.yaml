@@ -1,0 +1,49 @@
+apiVersion: core.eda.nokia.com/v1
+kind: Manifest
+metadata:
+  name: kafka-exporter
+spec:
+  image: ghcr.io/nokia-eda/apps/kafka-exporter:v2.0.1
+  group: kafka.eda.nokia.com
+  version: v1alpha1
+  title: Kafka Exporter
+  description: This application publishes alarms and state information from the network to a kafka cluster.
+  author: Nokia
+  supportedEndpoints:
+    - "srl:0.0.0"
+    - "srl:23.7.1" # specific release
+    - "srl:23.10.*" # any release in a minor
+    - "srl:24.*" # any release in a major
+    - "sros:23.7.r1"
+  supportedCoreVersions:
+    - "v2.0.0"
+    - "v0.0.0-0"
+  appInfo:
+    readme: README.md
+    documentation: DOCUMENTATION.md
+    license: LICENSE
+    screenshots:
+      - kx/assets/screenshot1.png
+    categories:
+      - "integrations"
+    ociSpecVersion: v1.0.0
+  components:
+    - crd:
+        path: kx/config/crd/bases/kafka.eda.nokia.com_producers.yaml
+        schema: kx/docs/openapiv3/eda_oas_kafka.eda.nokia.com_producers.json
+        namespaced: false
+        api:
+          expose: readWrite
+        ui:
+          category: Exporters
+          name: Kafka
+        kubernetes:
+          exportPolicy: all
+          importPolicy: all
+    - cr:
+        path: kx/manifests/app_deployment.yaml
+  dependencies:
+    - container:
+        name: kafka-exporter-controller
+        image: ghcr.io/nokia-eda/apps/kafka-exporter-controller:v2.0.1
+

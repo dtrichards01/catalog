@@ -1,0 +1,59 @@
+apiVersion: core.eda.nokia.com/v1
+kind: Manifest
+metadata:
+  name: anomalies
+spec:
+  group: anomalies.eda.nokia.com
+  version: v1alpha1
+  title: Anomalies
+  description: |
+    This application provides anomaly detection for various Network Operating Systems.
+
+    The following anomalies are supported:
+    - MTUMismatch - MTU mismatch between two interfaces
+  image: ghcr.io/nokia-eda/apps/anomalies:24.12.2
+  gitReference: 1da44402c90fbeba1161ccb8ea3350ef0353843d
+  gitPathPrefix: /
+  author: Nokia
+  supportedEndpoints:
+    - "srl:0.0.0"
+    - "srl:24.*" # any release in a major
+  supportedCoreVersions:
+    - "v2.0.0"
+  appInfo:
+    license: LICENSE
+    categories:
+      - "monitoring"
+  components:
+    - crd:
+        path: anomalies/crds/anomalies.eda.nokia.com_mtus.yaml
+        schema: anomalies/openapiv3/eda_oas_anomalies.eda.nokia.com_mtus.json
+        # ui:
+        #   category: Anomalies
+        #   name: MTU
+        api:
+          expose: readWrite
+    - crd:
+        path: anomalies/crds/anomalies.eda.nokia.com_mtustates.yaml
+        schema: anomalies/openapiv3/eda_oas_anomalies.eda.nokia.com_mtustates.json
+        api:
+          expose: none
+    - script:
+        path: anomalies/anomaly_mtu.py
+        type: config
+        trigger:
+          kind: MTU
+          #group:
+          #version:
+    - script:
+        path: anomalies/anomaly_mtu.py
+        type: state
+        trigger:
+          kind: MTUState
+          #group:
+          #version:
+  dependencies:
+    - file:
+        path: common/
+    - file:
+        path: utils/

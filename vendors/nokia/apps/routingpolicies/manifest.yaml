@@ -1,0 +1,78 @@
+apiVersion: core.eda.nokia.com/v1
+kind: Manifest
+metadata:
+  name: routingpolicies
+spec:
+  group: routingpolicies.eda.nokia.com
+  version: v1alpha1
+  title: Routing Policies
+  description: |
+    This application provides routing policies for various Network Operating Systems.
+  image: ghcr.io/nokia-eda/apps/routingpolicies:24.12.2
+  gitReference: 1da44402c90fbeba1161ccb8ea3350ef0353843d
+  gitPathPrefix: /
+  author: Nokia
+  appInfo:
+    license: LICENSE
+    categories:
+      - "networking"
+  supportedEndpoints:
+    - "srl:0.0.0"
+    - "srl:24.*" # any release in a major
+    - "sros:23.7.r1"
+  supportedCoreVersions:
+    - "v2.0.0"
+  components:
+    - crd:
+        path: routingpolicies/crds/routingpolicies.eda.nokia.com_policys.yaml
+        schema: routingpolicies/openapiv3/eda_oas_routingpolicies.eda.nokia.com_policys.json
+        ui:
+          category: Routing Policies
+          name: Policies
+        api:
+          expose: readWrite
+    - crd:
+        path: routingpolicies/crds/routingpolicies.eda.nokia.com_policydeployments.yaml
+        schema: routingpolicies/openapiv3/eda_oas_routingpolicies.eda.nokia.com_policydeployments.json
+        api:
+          expose: none
+    - crd:
+        path: routingpolicies/crds/routingpolicies.eda.nokia.com_prefixsets.yaml
+        schema: routingpolicies/openapiv3/eda_oas_routingpolicies.eda.nokia.com_prefixsets.json
+        ui:
+          category: Routing Policies
+          name: Prefix Sets
+        api:
+          expose: readWrite
+    - crd:
+        path: routingpolicies/crds/routingpolicies.eda.nokia.com_prefixsetdeployments.yaml
+        schema: routingpolicies/openapiv3/eda_oas_routingpolicies.eda.nokia.com_prefixsetdeployments.json
+        api:
+          expose: none
+    - script:
+        path: routingpolicies/policy_intent.py
+        type: config
+        trigger:
+          kind: Policy
+    - script:
+        path: routingpolicies/policydeployment_intent.py
+        type: config
+        trigger:
+          kind: PolicyDeployment
+    - script:
+        path: routingpolicies/prefixset_intent.py
+        type: config
+        trigger:
+          kind: PrefixSet
+    - script:
+        path: routingpolicies/prefixsetdeployment_intent.py
+        type: config
+        trigger:
+          kind: PrefixSetDeployment
+  dependencies:
+    - file:
+        path: routingpolicies/pysrc/
+    - file:
+        path: common/
+    - file:
+        path: utils/

@@ -1,0 +1,63 @@
+apiVersion: core.eda.nokia.com/v1
+kind: Manifest
+metadata:
+  name: timing
+spec:
+  group: timing.eda.nokia.com
+  version: v1alpha1
+  title: Timing
+  description: |
+    This application provides underlay timing resources for various Network Operating Systems.
+  image: ghcr.io/nokia-eda/apps/timing:24.12.2
+  gitReference: 1da44402c90fbeba1161ccb8ea3350ef0353843d
+  gitPathPrefix: /
+  author: Nokia
+  appInfo:
+    license: LICENSE
+    categories:
+      - "system"
+  supportedEndpoints:
+    - "srl:0.0.0"
+    - "srl:24.*" # any release in a major
+    - "sros:23.7.r1"
+  supportedCoreVersions:
+    - "v2.0.0"
+  components:
+    - crd:
+        path: timing/crds/timing.eda.nokia.com_ntpclients.yaml
+        schema: timing/openapiv3/eda_oas_timing.eda.nokia.com_ntpclients.json
+        ui:
+          category: Timing
+          name: NTP Clients
+        api:
+          expose: readWrite
+    - crd:
+        path: timing/crds/timing.eda.nokia.com_ntpclientstates.yaml
+        schema: timing/openapiv3/eda_oas_timing.eda.nokia.com_ntpclientstates.json
+        api:
+          expose: none
+    - script:
+        path: timing/ntpclient_intent.py
+        type: config
+        trigger:
+          kind: NTPClient
+    - script:
+        path: timing/ntpclientstate_intent.py
+        type: state
+        trigger:
+          kind: NTPClientState
+  dependencies:
+    - file:
+        path: timing/pysrc/
+    - file:
+        path: common/
+    - file:
+        path: utils/
+    - file:
+        path: interfaces/
+    - file:
+        path: routing/
+    - file:
+        path: services/
+    - file:
+        path: bootstrap/

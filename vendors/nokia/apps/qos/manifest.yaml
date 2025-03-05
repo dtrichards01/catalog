@@ -1,0 +1,95 @@
+apiVersion: core.eda.nokia.com/v1
+kind: Manifest
+metadata:
+  name: qos
+spec:
+  group: qos.eda.nokia.com
+  version: v1alpha1
+  title: QoS
+  description: |
+    This application provides resources relating to QOS for various Network Operating Systems.
+  image: ghcr.io/nokia-eda/apps/qos:24.12.2
+  gitReference: 1da44402c90fbeba1161ccb8ea3350ef0353843d
+  gitPathPrefix: /
+  author: Nokia
+  appInfo:
+    license: LICENSE
+    categories:
+      - "networking"
+  supportedEndpoints:
+    - "srl:0.0.0"
+    - "srl:24.*" # any release in a major
+    - "sros:23.7.r1"
+  supportedCoreVersions:
+    - "v2.0.0"
+  components:
+    - crd:
+        path: qos/crds/qos.eda.nokia.com_ingresspolicys.yaml
+        schema: qos/openapiv3/eda_oas_qos.eda.nokia.com_ingresspolicys.json
+        ui:
+          category: QoS
+          name: Ingress Policies
+        api:
+          expose: readWrite
+    - crd:
+        path: qos/crds/qos.eda.nokia.com_egresspolicys.yaml
+        schema: qos/openapiv3/eda_oas_qos.eda.nokia.com_egresspolicys.json
+        ui:
+          category: QoS
+          name: Egress Policies
+        api:
+          expose: readWrite
+    - crd:
+        path: qos/crds/qos.eda.nokia.com_policydeployments.yaml
+        schema: qos/openapiv3/eda_oas_qos.eda.nokia.com_policydeployments.json
+        ui:
+          category: QoS
+          name: Policy Deployment
+        api:
+          expose: readWrite
+    - crd:
+        path: qos/crds/qos.eda.nokia.com_forwardingclasss.yaml
+        schema: qos/openapiv3/eda_oas_qos.eda.nokia.com_forwardingclasss.json
+        ui:
+          category: QoS
+          name: Forwarding Class
+        api:
+          expose: readWrite
+        kubernetes:
+          importPolicy: all
+    - crd:
+        path: qos/crds/qos.eda.nokia.com_queues.yaml
+        schema: qos/openapiv3/eda_oas_qos.eda.nokia.com_queues.json
+        ui:
+          category: QoS
+          name: Queue
+        api:
+          expose: readWrite
+        kubernetes:
+          importPolicy: all
+    - script:
+        path: qos/ingresspolicy_intent.py
+        type: config
+        trigger:
+          kind: IngressPolicy
+    - script:
+        path: qos/egresspolicy_intent.py
+        type: config
+        trigger:
+          kind: EgressPolicy
+    - script:
+        path: qos/policydeployment_intent.py
+        type: config
+        trigger:
+          kind: PolicyDeployment
+  dependencies:
+    - file:
+        path: qos/pysrc/
+    - file:
+        path: common/
+    - file:
+        path: utils/
+    - file:
+        path: filters/
+    - file:
+        path: interfaces/

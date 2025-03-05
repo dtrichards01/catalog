@@ -1,0 +1,72 @@
+apiVersion: core.eda.nokia.com/v1
+kind: Manifest
+metadata:
+  name: bootstrap
+spec:
+  group: bootstrap.eda.nokia.com
+  version: v1alpha1
+  title: Bootstrap
+  description: |
+    This application provides device bootstrap for various Network Operating Systems.
+
+    It generates initial device configuration for Zero Touch Provisioning (ZTP).
+  image: ghcr.io/nokia-eda/apps/bootstrap:24.12.2
+  gitReference: 1da44402c90fbeba1161ccb8ea3350ef0353843d
+  gitPathPrefix: /
+  author: Nokia
+  appInfo:
+    license: LICENSE
+    categories:
+      - "core"
+  supportedEndpoints:
+    - "srl:0.0.0"
+    - "srl:24.*" # any release in a major
+  supportedCoreVersions:
+    - "v2.0.0"
+  components:
+    - crd:
+        path: bootstrap/crds/bootstrap.eda.nokia.com_inits.yaml
+        schema: bootstrap/openapiv3/eda_oas_bootstrap.eda.nokia.com_inits.json
+        ui:
+          category: Node Management
+          name: Bootstrap
+          panel: system_administration
+        api:
+          expose: readWrite
+    - crd:
+        path: bootstrap/crds/bootstrap.eda.nokia.com_managementrouters.yaml
+        schema: bootstrap/openapiv3/eda_oas_bootstrap.eda.nokia.com_managementrouters.json
+        ui:
+          category: Management Router
+          name: Management Routers
+        api:
+          expose: readWrite
+    - crd:
+        path: bootstrap/crds/bootstrap.eda.nokia.com_managementrouterstates.yaml
+        schema: bootstrap/openapiv3/eda_oas_bootstrap.eda.nokia.com_managementrouterstates.json
+        api:
+          expose: none
+    - script:
+        path: bootstrap/init_intent.py
+        type: config
+        trigger:
+          kind: Init
+          #group:
+          #version:
+    - script:
+        path: bootstrap/managementrouter_intent.py
+        type: config
+        trigger:
+          kind: ManagementRouter
+    - script:
+        path: bootstrap/managementrouterstate_intent.py
+        type: state
+        trigger:
+          kind: ManagementRouterState
+  dependencies:
+    - file:
+        path: bootstrap/pysrc/
+    - file:
+        path: common/
+    - file:
+        path: utils/

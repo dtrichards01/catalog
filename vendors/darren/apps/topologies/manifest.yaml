@@ -8,10 +8,8 @@ spec:
   title: Topologies
   description: |
     This application provides physical topology support
-  image: ghcr.io/nokia-eda/apps/topologies:24.12.2
-  gitReference: 1da44402c90fbeba1161ccb8ea3350ef0353843d
-  gitPathPrefix: /
-  author: Nokia
+  image: ghcr.io/dtrichards01/apps/topologies:v24.12.2
+  author: darren
   appInfo:
     license: LICENSE
     categories:
